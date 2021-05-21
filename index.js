@@ -6,7 +6,7 @@ const { user, password } = require('./config.json')
 const colors = require('colors')
 const faker = require('faker');
 const eee = fs.createWriteStream('./txt/reset.txt', { flags: 'a' })
-require('events').EventEmitter.defaultMaxListeners = 100;
+require('events').EventEmitter.defaultMaxListeners = 500;
 const newpass = faker.internet.password()
 
 fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
@@ -94,7 +94,7 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
             imap.once('ready', async function() {
                 await openInbox(async function(err, box) {
                     if (err) throw err;
-                    const f = imap.seq.fetch(`1:500`, {
+                    const f = imap.seq.fetch(`1:5000`, {
                         bodies: 'HEADER.FIELDS (FROM TO SUBJECT DATE)',
                         struct: true
                     });
