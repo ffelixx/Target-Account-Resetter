@@ -1,5 +1,5 @@
 const fs = require('fs');
-const puppeteer = require('puppeteer-extra');
+const puppeteer = require('puppeteer');
 let counter = 0;
 const yaml = require('js-yaml');
 const { user, password } = require('./config.json')
@@ -25,9 +25,6 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
             let index = proxies.indexOf(proxy)
             proxies.splice(index, 1)
             let email = emaiel.split(":")[0]
-
-            const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-            puppeteer.use(StealthPlugin())
     
             const browser = await puppeteer.launch({             
                 args: [
