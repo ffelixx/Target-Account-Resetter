@@ -1,12 +1,12 @@
 const fs = require('fs');
-const puppeteer = require('puppeteer-extra');
+const puppeteer = require('puppeteer');
 let counter = 0;
 const yaml = require('js-yaml');
 const { user, password } = require('./config.json')
 const colors = require('colors')
 const faker = require('faker');
 const eee = fs.createWriteStream('./txt/reset.txt', { flags: 'a' })
-require('events').EventEmitter.defaultMaxListeners = 100;
+require('events').EventEmitter.defaultMaxListeners = 500;
 const newpass = faker.internet.password()
 
 fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
@@ -25,9 +25,6 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
             let index = proxies.indexOf(proxy)
             proxies.splice(index, 1)
             let email = emaiel.split(":")[0]
-
-            const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-            puppeteer.use(StealthPlugin())
     
             const browser = await puppeteer.launch({             
                 args: [
