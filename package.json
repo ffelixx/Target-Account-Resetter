@@ -10,7 +10,6 @@
     "author": "felix",
     "license": "ISC",
     "dependencies": {
-        "cheerio": "*",
         "colors": "^1.4.0",
         "faker": "^5.5.3",
         "imap": "^0.8.19",
