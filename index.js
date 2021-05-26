@@ -2,7 +2,7 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 let counter = 0;
 const yaml = require('js-yaml');
-const { user, password } = require('./config.json')
+const { user, password } = require('./dev.json')
 const colors = require('colors')
 const faker = require('faker');
 const eee = fs.createWriteStream('./txt/reset.txt', { flags: 'a' })
@@ -85,16 +85,17 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
                 tls: true,
                 tlsOptions: { rejectUnauthorized: false }
             });
-
+            const today = new Date();
+            const month = today.toLocaleString('default', { month: 'long' })
+            const year = today.getFullYear().toString()
+            const day = today.getDay().toString()
             imap.connect();
             async function openInbox(cb) { imap.openBox('INBOX', false, cb); }
             imap.once('ready', async function() {
                 await openInbox(async function(err, box) {
                     if (err) throw err;
-                    const f = imap.seq.fetch(`1:5000`, {
-                        bodies: 'HEADER.FIELDS (FROM TO SUBJECT DATE)',
-                        struct: true
-                    });
+                    imap.search([ 'UNSEEN', ['SINCE', `${month} ${day}, ${year}`] ], function(err, results) {
+                    var f = imap.fetch(results, { bodies: '' })
                     f.on('message', async function(msg, seqno) {
                         msg.on('body', async function(stream, info) {
                             let buffer = '';
@@ -103,6 +104,7 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
                             });
                             stream.once('end', async function reg() {
                                 const header = inspect(Imap.parseHeader(buffer))
+                                console.log(header)
                                 if(header.toString().includes('Target')){
                                 const obj = yaml.load(header);
                                 const rec = obj.to;
@@ -158,7 +160,6 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
                             });
                         });
                     });
-
                     f.on('error', async function(err) {
                         console.error(error)
                     });
@@ -166,6 +167,7 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
                     f.once('end', function() {
                         imap.end();
                     });
+                })
                       
     
                 });
