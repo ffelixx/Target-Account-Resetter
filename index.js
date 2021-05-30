@@ -104,7 +104,6 @@ fs.readFile('./txt/proxies.txt', 'utf8', async function(err, data) {
                             });
                             stream.once('end', async function reg() {
                                 const header = inspect(Imap.parseHeader(buffer))
-                                console.log(header)
                                 if(header.toString().includes('Target')){
                                 const obj = yaml.load(header);
                                 const rec = obj.to;
